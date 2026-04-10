@@ -26,3 +26,4 @@ C:\Users\danii\Desktop\ITransition_COURSE\task_3\task3\obj\Debug\net9.0\refint\t
 C:\Users\danii\Desktop\ITransition_COURSE\task_3\task3\obj\Debug\net9.0\task3.pdb
 C:\Users\danii\Desktop\ITransition_COURSE\task_3\task3\obj\Debug\net9.0\task3.genruntimeconfig.cache
 C:\Users\danii\Desktop\ITransition_COURSE\task_3\task3\obj\Debug\net9.0\ref\task3.dll
+C:\Users\danii\Desktop\ITransition_COURSE\task_3\task3\obj\Debug\net9.0\task3.sourcelink.json

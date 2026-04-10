@@ -5,21 +5,36 @@ namespace task3
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+            builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+
             var app = builder.Build();
 
             app.MapGet("/daniil_prib_gmail_com", (string? x, string? y) =>
             {
-                if (!long.TryParse(x, out long valX) || !long.TryParse(y, out long valY) || valX < 0 || valY < 0)
+                if (!ulong.TryParse(x, out ulong valX) || !ulong.TryParse(y, out ulong valY))
                 {
                     return Results.Text("NaN");
                 }
 
-                if (valX == 0 || valY == 0) return Results.Text("0");
+                if (valX == 0 || valY == 0)
+                {
+                    return Results.Text("0");
+                }                    
 
-                long gcd(long a, long b) => b == 0 ? a : gcd(b, a % b);
-                long lcm = (valX * valY) / gcd(valX, valY);
+                static ulong GetGcd(ulong a, ulong b) => b == 0 ? a : GetGcd(b, a % b);
 
-                return Results.Text(lcm.ToString());
+                try
+                {
+                    ulong gcd = GetGcd(valX, valY);
+                    ulong lcm = checked((valX / gcd) * valY);
+                    return Results.Text(lcm.ToString());
+                }
+                catch (OverflowException)
+                {
+                    return Results.Text("NaN");
+                }
             });
 
             app.Run();
