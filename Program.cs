@@ -1,43 +1,36 @@
-namespace task3
+using System;
+using System.Numerics;
+
+namespace task3;
+
+public static class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
+        var builder = WebApplication.CreateBuilder(args);
+
+        var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+        builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+
+        var app = builder.Build();
+
+        app.MapGet("/daniil_prib_gmail_com", (string? x, string? y) =>
         {
-            var builder = WebApplication.CreateBuilder(args);
-
-            var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-            builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
-
-            var app = builder.Build();
-
-            app.MapGet("/daniil_prib_gmail_com", (string? x, string? y) =>
+            if (!BigInteger.TryParse(x, out BigInteger valX) ||
+                !BigInteger.TryParse(y, out BigInteger valY) ||
+                valX <= 0 || valY <= 0)
             {
-                if (!ulong.TryParse(x, out ulong valX) || !ulong.TryParse(y, out ulong valY))
-                {
-                    return Results.Text("NaN");
-                }
+                return Results.Text("NaN");
+            }
 
-                if (valX == 0 || valY == 0)
-                {
-                    return Results.Text("0");
-                }                    
+            static BigInteger GetGcd(BigInteger a, BigInteger b) => b == 0 ? a : GetGcd(b, a % b);
 
-                static ulong GetGcd(ulong a, ulong b) => b == 0 ? a : GetGcd(b, a % b);
+            BigInteger gcd = GetGcd(valX, valY);
+            BigInteger lcm = (valX / gcd) * valY;
 
-                try
-                {
-                    ulong gcd = GetGcd(valX, valY);
-                    ulong lcm = checked((valX / gcd) * valY);
-                    return Results.Text(lcm.ToString());
-                }
-                catch (OverflowException)
-                {
-                    return Results.Text("NaN");
-                }
-            });
+            return Results.Text(lcm.ToString());
+        });
 
-            app.Run();
-        }
+        app.Run();
     }
 }
